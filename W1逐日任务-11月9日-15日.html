@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W1 逐日任务 · 11/9 – 11/15</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1a1d24; --ink2:#4a5160; --ink3:#8b93a3;
+    --line:#e4e7ee; --accent:#2f6f6b; --accent-soft:#e8f2f1;
+    --warn:#b4531f; --warn-soft:#fdf1e7; --ok:#1f7a4d; --ok-soft:#e9f6ef;
+    --blue:#2c5aa0; --blue-soft:#eaeff8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:40px 20px 80px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto}
+  .kicker{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:600;text-transform:uppercase}
+  h1{font-size:30px;line-height:1.25;margin:8px 0 8px;letter-spacing:-.02em;font-weight:700}
+  .sub{color:var(--ink2);font-size:15px;margin:0}
+
+  .goal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:24px 0 30px}
+  .goal h3{margin:0 0 12px;font-size:14px;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase}
+  .goal-items{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .goal-items div{background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--ink2)}
+  .goal-items b{display:block;color:var(--ink);font-size:14px;margin-bottom:2px}
+
+  .day{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+  .dhead{display:flex;align-items:baseline;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:#fbfcfd}
+  .dnum{font-size:11px;font-weight:800;letter-spacing:.08em;color:#fff;background:var(--accent);border-radius:5px;padding:3px 8px;white-space:nowrap}
+  .dtitle{font-size:15.5px;font-weight:700}
+  .dhours{margin-left:auto;font-size:12.5px;color:var(--ink3);white-space:nowrap}
+
+  ol.steps{margin:0;padding:16px 18px 6px 40px}
+  ol.steps li{font-size:13.8px;color:var(--ink2);margin-bottom:9px;padding-left:2px}
+  ol.steps li b{color:var(--ink)}
+  .t{display:inline-block;min-width:46px;font-size:11.5px;font-weight:700;color:var(--blue);background:var(--blue-soft);border-radius:4px;padding:0 6px;margin-right:8px;text-align:center;font-variant-numeric:tabular-nums}
+
+  .foot{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);background:#fcfdfe}
+  .foot > div{padding:12px 18px;font-size:13px;color:var(--ink2)}
+  .foot > div:first-child{border-right:1px solid var(--line)}
+  .foot h5{margin:0 0 4px;font-size:11px;letter-spacing:.08em;color:var(--ink3);text-transform:uppercase}
+  .foot code{background:#f1f3f7;border-radius:4px;padding:1px 6px;font-size:12px;font-family:Consolas,"SF Mono",monospace;color:#334}
+  .check{color:var(--ok);font-weight:600}
+  .warnbox{color:#7a3b12}
+
+  .rules{background:var(--warn-soft);border:1px solid #f0d8c3;border-radius:14px;padding:16px 20px;margin-top:24px}
+  .rules h3{margin:0 0 8px;font-size:14.5px;color:#7a3b12}
+  .rules ul{margin:0;padding-left:18px;font-size:13.5px;color:#6b4020}
+  .rules li{margin-bottom:6px}
+  .rules b{color:#54300f}
+
+  .note{font-size:13px;color:var(--ink3);margin:0 0 20px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px;margin-top:8px}
+  th{background:#fbfcfd;text-align:left;padding:9px 12px;font-size:12px;color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line)}
+  td{padding:9px 12px;border-bottom:1px solid #f0f2f6;color:var(--ink2)}
+  tr:last-child td{border-bottom:none}
+
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3);text-align:center}
+
+  @media (max-width:760px){
+    .goal-items,.foot{grid-template-columns:1fr}
+    .foot > div:first-child{border-right:none;border-bottom:1px solid var(--line)}
+    body{padding:24px 14px 60px}
+    h1{font-size:24px}
+    ol.steps{padding-left:24px}
+  }
+  @media print{
+    body{background:#fff;padding:0;font-size:11.5px}
+    .day,.goal,.rules,table{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">Week 1 · 11/9 – 11/15</div>
+  <h1>本周逐日任务</h1>
+  <p class="sub">主线：土堆 P1–P15 ＋《深度学习入门：基于Python的理论与实现》（斋藤康毅）3.4–3.6。交付：3 个小项目、6 条 commit、1 份周报（周六发导师）。</p>
+
+  <div class="goal">
+    <h3>本周结束后必须成立的三件事</h3>
+    <div class="goal-items">
+      <div><b>能读自己的数据</b>自定义 Dataset + DataLoader + Transforms 串成一条管道，任意图片文件夹都能喂进模型。</div>
+      <div><b>能看见发生了什么</b>TensorBoard 里同时有 loss 曲线和图片网格，不用靠 print 猜。</div>
+      <div><b>能证明是自己做的</b>GitHub 上 6 条 commit，周六第 1 份周报发给导师。</div>
+    </div>
+  </div>
+
+  <p class="note">每天 2 小时，切成「看 40 分钟 → 敲 60 分钟 → 记 20 分钟」。<b>视频一律 1.5 倍速，看到本节代码能跑就关。</b>下面只给 API 和结构，<b>故意不给完整代码</b>——导师的红线是手敲，自己拼出来才算过。</p>
+  <p class="note"><b>关于看书：</b>本周只排周六 60 分钟，读《深度学习入门：基于Python的理论与实现》（斋藤康毅）第 3 章 3.4–3.6。周一到周五刻意不排——第一周先把工具链跑通，一上来啃公式最容易把人劝退。从 W2 起书的分量加上来，它的第 4、5 章合计约 60 页、约 2 小时，是整个七周里真正要精读的部分。</p>
+
+  <!-- 周一 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周一 11/9</span><span class="dtitle">环境核对 ＋ 仓库立起来</span><span class="dhours">2 h</span></div>
+    <ol class="steps">
+      <li><span class="t">20′</span><b>环境三连</b>：在 Jupyter 里依次打印 <code>torch.__version__</code>、<code>torch.cuda.is_available()</code>、<code>torch.cuda.get_device_name(0)</code>。截图存 <code>reports/w1/env.png</code>。</li>
+      <li><span class="t">40′</span><b>P1–P5 速览</b>（1.5 倍速）。唯一要记住的是 <code>dir()</code> 和 <code>help()</code> 怎么查包里有什么——后面天天用。</li>
+      <li><span class="t">50′</span><b>建仓库</b>：本地目录 <code>data/ notebooks/ src/ logs/ reports/</code>；写 <code>.gitignore</code> 排除 <code>data/ logs/ *.pth __pycache__/</code>；README 三行说明；push 到 GitHub。</li>
+      <li><span class="t">10′</span>记笔记：只记今天遇到的报错和版本号。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 远程仓库能看到内容，<code>git log</code> 有 1 条记录</div>
+      <div><h5>commit</h5><code>chore: init repo and env check</code></div>
+    </div>
+  </div>
+
+  <!-- 周二 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周二 11/10</span><span class="dtitle">小项目 ①　自定义 Dataset</span><span class="dhours">2 h</span></div>
+    <ol class="steps">
+      <li><span class="t">15′</span><b>准备素材</b>：往 <code>data/myimages/</code> 丢 20 张任意 jpg（手机拍的、壁纸都行），尺寸不用统一。</li>
+      <li><span class="t">45′</span><b>P6 + P7</b>：数据加载初认识、Dataset 类实战。</li>
+      <li><span class="t">50′</span><b>关视频写 MyDataset</b>：<code>__init__</code> 收 root 目录并列出文件名列表；<code>__len__</code> 返回数量；<code>__getitem__</code> 用 PIL 打开 → 应用 transform → 返回。加一个 <code>transform=None</code> 参数。</li>
+      <li><span class="t">10′</span>验证：<code>len(ds)</code> 是不是 20，<code>ds[0].shape</code> 是不是 <code>(3,H,W)</code>，随手打印其中一张确认没读错索引。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 数量、形状都对；能说出 <code>__getitem__</code> 为什么只返回一张而不是一批</div>
+      <div><h5>commit</h5><code>feat: custom Dataset for local images</code></div>
+    </div>
+  </div>
+
+  <!-- 周三 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周三 11/11</span><span class="dtitle">小项目 ① 收尾　DataLoader 批量</span><span class="dhours">2 h</span></div>
+    <ol class="steps">
+      <li><span class="t">30′</span><b>跳看 P15</b>（先看这集，和昨天的 Dataset 配套，比按顺序看更顺）。</li>
+      <li><span class="t">60′</span><b>接 DataLoader</b>：<code>batch_size=4, shuffle=True, num_workers=0</code>，迭代 3 个 batch 打印 <code>x.shape, x.dtype</code>。</li>
+      <li><span class="t">20′</span><b>做个对比</b>：<code>shuffle=True</code> 和 <code>False</code> 各迭代一次，看第一个 batch 是不是同一批数据。</li>
+      <li><span class="t">10′</span>笔记：<code>batch_size / shuffle / num_workers</code> 各管什么。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 能解释 Windows 下 <code>num_workers&gt;0</code> 为什么容易卡死（多进程 fork 机制）</div>
+      <div><h5>commit</h5><code>feat: DataLoader batching</code></div>
+    </div>
+  </div>
+
+  <!-- 周四 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周四 11/12</span><span class="dtitle">小项目 ③　Transforms 对比</span><span class="dhours">2 h</span></div>
+    <ol class="steps">
+      <li><span class="t">50′</span><b>P10–P14</b>：Transforms 使用（一）（二）、常见变换（P12/P13 可 1.5 倍速）。</li>
+      <li><span class="t">50′</span><b>搭管道</b>：<code>Compose([Resize(256), CenterCrop(224), ToTensor(), Normalize(mean, std)])</code>，接到昨天的 Dataset 上。</li>
+      <li><span class="t">20′</span><b>出对比图</b>：同一张图做 原图 / 裁剪 / 水平翻转 / 归一化后 四种处理，拼成 4 联图存 <code>reports/w1/transform_grid.png</code>。</li>
+      <li><span class="t">10′</span>想清楚：<code>Normalize</code> 那串 mean/std 是哪来的？换成自己数据的均值方差会怎样？</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 4 联图肉眼能看出差别；能说出 ToTensor 把 0–255 变成了什么范围</div>
+      <div><h5>commit</h5><code>feat: transforms pipeline + comparison grid</code></div>
+    </div>
+  </div>
+
+  <!-- 周五 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周五 11/13</span><span class="dtitle">小项目 ②　TensorBoard 看得见</span><span class="dhours">2 h</span></div>
+    <ol class="steps">
+      <li><span class="t">40′</span><b>P8–P9</b>：TensorBoard 使用（一）（二）。</li>
+      <li><span class="t">50′</span><b>写记录</b>：<code>SummaryWriter</code> → <code>add_scalar</code> 记 100 步假 loss → <code>add_image</code> 记一个 batch 的网格图。</li>
+      <li><span class="t">20′</span><b>启动看板</b>：Anaconda Prompt 里 <code>tensorboard --logdir=绝对路径</code>，浏览器开 <code>localhost:6006</code>，截图存 <code>reports/w1/tb.png</code>。</li>
+      <li><span class="t">10′</span>笔记。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> SCALARS 和 IMAGES 两个 tab 都有内容</div>
+      <div><h5>commit</h5><code>feat: tensorboard logging</code></div>
+    </div>
+  </div>
+
+  <!-- 周六 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周六 11/14</span><span class="dtitle">串成一条管道 ＋ 读第 3 章 ＋ 发周报</span><span class="dhours">5 h</span></div>
+    <ol class="steps">
+      <li><span class="t">90′</span><b>重构</b>：把周二到周五的代码合成 <code>src/data_pipeline.py</code>，一个函数返回 <code>loader</code> 和 <code>writer</code>。这步才是「会」，前四天只是「见过」。</li>
+      <li><span class="t">30′</span><b>录 90 秒</b>：跑一遍管道 + 切到 TensorBoard 画面，存 <code>reports/w1/demo.mp4</code>。</li>
+      <li><span class="t">30′</span><b>补 README</b>：怎么装、怎么跑、本周完成了什么。</li>
+      <li><span class="t">60′</span><b>读《深度学习入门：基于Python的理论与实现》第 3 章 3.4–3.6</b>：矩阵乘法、softmax、交叉熵。</li>
+      <li><span class="t">40′</span><b>手写验证</b>：用 numpy 写 softmax + 交叉熵（约 5 行），和 <code>torch.nn.functional</code> 的结果比对，差值应 &lt; 1e-6。<b>这一步是「反向传播」最先落地的地方。</b></li>
+      <li><span class="t">20′</span>记笔记。</li>
+      <li><span class="t">22:00</span><b>发周报</b>：微信或邮箱发给导师，第一份附一句「老师，以后每周六发周报给您，格式您看行吗」。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 周报已发出，里面有 3 个数字、3 个 commit hash、1 张 TensorBoard 截图</div>
+      <div><h5>commit</h5><code>refactor: unify data pipeline + README</code></div>
+    </div>
+  </div>
+
+  <!-- 周日 -->
+  <div class="day">
+    <div class="dhead"><span class="dnum">周日 11/15</span><span class="dtitle">补欠账 ＋ 把下周排进日历</span><span class="dhours">3 h</span></div>
+    <ol class="steps">
+      <li><span class="t">90′</span><b>补欠账</b>：本周哪天没达标就补哪天，<b>三个小项目不许跨周</b>。</li>
+      <li><span class="t">30′</span><b>预习 P16</b>（nn.Module）前 10 分钟，写下 3 个看不懂的点，下周带着问题看。</li>
+      <li><span class="t">30′</span><b>复盘 10 分钟</b>：本周计划 15 小时，实际几小时？哪个环节最慢（看视频 / 敲代码 / debug）？下周相应调整。</li>
+      <li><span class="t">30′</span><b>排日期</b>：把 12 个小项目各填一个具体日期，写在纸上贴显示器边。这是防止七周缩水成三周的关键动作。</li>
+    </ol>
+    <div class="foot">
+      <div><h5>验收</h5><span class="check">✓</span> 12 个项目都有日期；下周不用再想「该做哪个」</div>
+      <div><h5>commit</h5><code>docs: week1 notes and review</code></div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <h3>本周不要碰的东西</h3>
+    <ul>
+      <li><b>不要看 P16 之后的视频</b>（周日预习除外）。W2 才讲网络，提前看只会两头空。</li>
+      <li><b>不要碰 CNN、不要碰论文复现。</b>那些是 W3 和 W4 的事，现在想只会焦虑。</li>
+      <li><b>不要装任何新包。</b>torchvision、tensorboard 你环境里已经有了；真报缺包先确认是不是用错了 Python 解释器——你机器上系统 Python 的 <code>--user</code> 包会遮蔽 Anaconda 的同名包，这是你踩过的坑。</li>
+      <li><b>不要为了「好看」调参数。</b>本周的指标是「跑通 + 能解释」，不是准确率。</li>
+    </ul>
+  </div>
+
+  <p class="note" style="margin-top:22px">哪天被课业冲掉了不用慌，周日就是缓冲。<b>唯一不能动的底线是周六那份周报</b>——它是你七周里唯一的外部节奏。</p>
+
+  <table>
+    <thead><tr><th style="width:70px">日期</th><th>一句话</th><th style="width:64px">时长</th><th style="width:80px">打卡</th></tr></thead>
+    <tbody>
+      <tr><td>11/9 一</td><td>环境核对 + 建仓库</td><td>2h</td><td></td></tr>
+      <tr><td>11/10 二</td><td>Dataset（小项目①）</td><td>2h</td><td></td></tr>
+      <tr><td>11/11 三</td><td>DataLoader（小项目①收尾）</td><td>2h</td><td></td></tr>
+      <tr><td>11/12 四</td><td>Transforms（小项目③）</td><td>2h</td><td></td></tr>
+      <tr><td>11/13 五</td><td>TensorBoard（小项目②）</td><td>2h</td><td></td></tr>
+      <tr><td>11/14 六</td><td>串管道 + 读书 + <b>发周报</b></td><td>5h</td><td></td></tr>
+      <tr><td>11/15 日</td><td>补欠账 + 排下周日期</td><td>3h</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    W1 逐日任务 · 2026.11.9 – 11.15 · 配套《PyTorch 七周冲刺计划》第 03 节 · Ctrl/Cmd + P 打印
+  </footer>
+
+</div>
+</body>
+</html>

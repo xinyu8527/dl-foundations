@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyTorch 七周冲刺计划 v2 · 对齐导师 12 月底要求</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1a1d24; --ink2:#4a5160; --ink3:#8b93a3;
+    --line:#e4e7ee; --accent:#2f6f6b; --accent-soft:#e8f2f1;
+    --warn:#b4531f; --warn-soft:#fdf1e7; --ok:#1f7a4d; --ok-soft:#e9f6ef;
+    --blue:#2c5aa0; --blue-soft:#eaeff8; --purple:#6b5ba8; --purple-soft:#efecf9;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:40px 20px 80px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    font-size:15px; line-height:1.75; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  header{margin-bottom:32px}
+  .kicker{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:600;text-transform:uppercase}
+  h1{font-size:32px;line-height:1.25;margin:10px 0 8px;letter-spacing:-.02em;font-weight:700}
+  .sub{color:var(--ink2);font-size:15px}
+  .meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 14px;font-size:13px;color:var(--ink2)}
+  .pill b{color:var(--ink);font-weight:600}
+
+  section{margin:34px 0}
+  h2{font-size:19px;margin:0 0 4px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+  h2 .num{font-size:12px;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:2px 7px;font-weight:700;letter-spacing:.04em}
+  .sec-note{color:var(--ink3);font-size:13px;margin:0 0 16px 0}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px}
+  .card h3{margin:0 0 6px;font-size:15px;font-weight:700}
+  .card p{margin:0;font-size:13.5px;color:var(--ink2)}
+  .card .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
+
+  /* 修正说明 */
+  .fix{background:var(--warn-soft);border:1px solid #f0d8c3;border-radius:14px;padding:6px 20px 14px}
+  .fix h3{margin:14px 0 4px;font-size:14.5px;color:#7a3b12}
+  .fix p{margin:0;font-size:13.5px;color:#6b4020}
+  .fix .was{text-decoration:line-through;color:#a5795a}
+
+  /* timeline */
+  .tl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;overflow-x:auto}
+  .tl-row{display:flex;align-items:center;gap:12px;margin-bottom:9px}
+  .tl-label{width:136px;flex:0 0 136px;font-size:12.5px;color:var(--ink2);text-align:right;line-height:1.4}
+  .tl-track{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:5px;min-width:430px}
+  .bar{height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600;color:#fff;letter-spacing:.02em}
+  .b1{background:#3f8f8a}.b2{background:#4f7fc4}.b3{background:#c27b3c}.b4{background:#7a6bab}
+  .tl-head{display:flex;gap:12px;margin-bottom:6px}
+  .tl-head .tl-label{font-weight:600;color:var(--ink3);font-size:11.5px}
+  .tl-head .tl-track div{font-size:11.5px;color:var(--ink3);text-align:center;font-weight:600}
+  .phase-key{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink2)}
+  .phase-key span{display:flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+  /* week cards */
+  .week{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden}
+  .whead{display:flex;align-items:baseline;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);background:#fbfcfd}
+  .wno{font-size:11px;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--accent);border-radius:5px;padding:3px 8px}
+  .wtitle{font-size:15.5px;font-weight:700}
+  .wdate{margin-left:auto;font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+  .wbody{padding:14px 18px 16px;display:grid;grid-template-columns:1fr 1fr;gap:6px 28px}
+  .wcol h4{margin:6px 0 4px;font-size:12px;letter-spacing:.08em;color:var(--ink3);font-weight:700;text-transform:uppercase}
+  .wcol ul{margin:0;padding-left:0;list-style:none}
+  .wcol li{position:relative;padding-left:20px;font-size:13.5px;color:var(--ink2);margin-bottom:5px}
+  .wcol li::before{content:"";position:absolute;left:2px;top:8px;width:11px;height:11px;border:1.5px solid #c3cad6;border-radius:3px}
+  .wcol li.ok::before{border-color:var(--ok);background:var(--ok)}
+  .gate{grid-column:1/-1;margin-top:10px;padding:10px 14px;border-radius:9px;font-size:13px;background:var(--warn-soft);color:#7a3b12;border-left:3px solid var(--warn)}
+  .gate b{color:#5e2c0b}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}
+  th{background:#fbfcfd;text-align:left;padding:10px 12px;font-size:12px;letter-spacing:.05em;color:var(--ink3);font-weight:700;border-bottom:1px solid var(--line)}
+  td{padding:10px 12px;border-bottom:1px solid #f0f2f6;color:var(--ink2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  .wk{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:1px 6px}
+  .opt{color:var(--ink3);font-size:12px}
+  code{background:#f1f3f7;border-radius:4px;padding:1px 6px;font-size:12.5px;font-family:Consolas,"SF Mono",monospace;color:#334}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .list-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .list-card h4{margin:0 0 10px;font-size:14px;font-weight:700}
+  .list-card ol,.list-card ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink2)}
+  .list-card li{margin-bottom:7px}
+  .danger li::marker{color:var(--warn)}
+  .danger b{color:#7a3b12}
+  .yes b{color:var(--ok)} .no b{color:#b03a3a}
+
+  .rp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:13.5px;color:var(--ink2)}
+  .rp ol{margin:0;padding-left:20px}
+  .rp li{margin-bottom:8px}
+  .rp b{color:var(--ink)}
+
+  .after{background:var(--purple-soft);border:1px solid #ddd6f0;border-radius:14px;padding:16px 20px}
+  .after h3{margin:0 0 10px;font-size:15px;color:#4a3d7a}
+  .after ol{margin:0;padding-left:20px;font-size:13.5px;color:#4d4570}
+  .after li{margin-bottom:8px}
+  .after b{color:#372d5e}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3);text-align:center}
+
+  @media (max-width:760px){
+    .grid3,.two,.wbody{grid-template-columns:1fr}
+    body{padding:24px 14px 60px}
+    h1{font-size:25px}
+    .tl-label{width:92px;flex:0 0 92px;font-size:11.5px}
+  }
+  @media print{
+    body{background:#fff;padding:0;font-size:12px}
+    .week,.card,.tl,table,.list-card,.rp,.after,.fix{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Research Training · Phase 1 · v2 对齐版</div>
+  <h1>PyTorch 七周冲刺计划</h1>
+  <p class="sub">按方承炀「12 月底」节点重排：<b>一周 1–2 个小实践（累计约 12 个）＋ 独立复现 1 篇经典论文</b>。不是把课看完，是攒够能证明自己的东西。</p>
+  <div class="meta-row">
+    <span class="pill"><b>周期</b> 11/9 – 12/27（7 周）</span>
+    <span class="pill"><b>硬交付</b> 10–14 个小项目 + 1 篇复现</span>
+    <span class="pill"><b>算力</b> RTX 5060 Laptop 8GB · cu128</span>
+    <span class="pill"><b>外部节点</b> 只有 12 月底，其余自造</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">00</span>你给的原文，改掉了我三个判断</h2>
+  <p class="sec-note">这三处不认，计划就是错的。先说我原来错在哪。</p>
+  <div class="fix">
+    <h3>① 项目形态：不是「1–2 个大项目」</h3>
+    <p><span class="was">原计划：4 周做一个 CIFAR-10 大项目</span> → <b>原文是「预计 1 至 2 个月内，每周需完成 1 至 2 个简单的 PyTorch 实践项目」。</b>考的是熟练度，不是你做了多复杂的模型。7 周对应 <b>10–14 个小项目</b>，每个 2–4 小时，跑通即算，不写长报告。</p>
+    <h3>② 论文复现进了 12 月底的交付物，不是「之后」</h3>
+    <p><span class="was">原计划：论文复现放到寒假</span> → <b>原文是「基础实践与论文复现（12 月底前）……独立完成经典论文复现，严禁直接复制代码或依赖大模型生成」。</b>复现必须吃掉 W4–W7，这是整份计划里权重最高的一件事。</p>
+    <h3>③ SVM 不能跳过</h3>
+    <p><span class="was">原计划：《统计学习方法》7 周内别碰</span> → <b>原文的深度学习基础明确列了「反向传播、CNN、DNN、SVM」。</b>SVM 要花 3–4 小时把思想讲清（最大间隔、支持向量、核技巧），配一个 sklearn 小实验。但仍然不做公式推导，也不通读李航。</p>
+    <p style="margin-top:10px"><b>反过来：</b>GAN / VAE / Transformer <b>不在导师列的四项里</b>，从必做移到选做，省下的时间给复现。</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">01</span>七周时间轴</h2>
+  <p class="sec-note">两条主线并行：橙色是每周小项目（不断线），紫色是论文复现（后四周的硬仗）。</p>
+  <div class="tl">
+    <div class="tl-head">
+      <div class="tl-label">主线 / 周次</div>
+      <div class="tl-track"><div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div><div>W7</div></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label">工具链地基</div>
+      <div class="tl-track"><div class="bar b1">数据管道</div><div class="bar b1">网络+训练</div><div class="bar b1">CNN+调参</div><div></div><div></div><div></div><div></div></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label">每周小项目</div>
+      <div class="tl-track"><div class="bar b3">2 个</div><div class="bar b3">3 个</div><div class="bar b3">3 个</div><div class="bar b3">2 个</div><div class="bar b3">2 个</div><div class="bar b3">2 个</div><div class="bar b3">收尾</div></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label">论文复现</div>
+      <div class="tl-track"><div></div><div></div><div></div><div class="bar b4">读论文+骨架</div><div class="bar b4">训练调参</div><div class="bar b4">对齐指标</div><div class="bar b4">报告</div></div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-label">汇报准备</div>
+      <div class="tl-track"><div></div><div></div><div></div><div></div><div></div><div></div><div class="bar b4">20 分钟试讲</div></div>
+    </div>
+    <div class="phase-key">
+      <span><i class="dot b1"></i>工具链（W1–W3）</span>
+      <span><i class="dot b3"></i>小项目（全程不断）</span>
+      <span><i class="dot b4"></i>复现与汇报（W4–W7）</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02</span>没有 deadline，就把 deadline 造出来</h2>
+  <p class="sec-note">这是全篇最需要你认真看的一节。导师中途不开会、不布置任务、不检查——意味着到 12 月底之前，唯一的反馈来自你自己。</p>
+  <div class="fix" style="background:var(--blue-soft);border-color:#ccd9ee">
+    <h3 style="color:#2c5aa0">先说结论：无人催的七周，通常缩水成三周</h3>
+    <p style="color:#3a4f70">这不是意志力问题，是没有「交付时刻」的问题。看视频有进度条，写代码没有。所以下面四条不是形式主义，是把外部约束补回来——<b>每条都要落到日历或人身上，不能只停留在「我打算」。</b></p>
+  </div>
+  <table style="margin-top:14px">
+    <thead><tr><th style="width:150px">机制</th><th>怎么做</th><th style="width:110px">防的是什么</th></tr></thead>
+    <tbody>
+      <tr><td><b>每周六发周报</b></td><td>设成手机每周重复提醒。照第 06 节模板写，<b>发给导师</b>（分组前没有小组长统收，就直接发导师微信/邮箱，问一句「周报这样发可以吗」）。写完发出去，这周才算结束。</td><td>拖延到「下周一起做」</td></tr>
+      <tr><td><b>12 个项目排日期</b></td><td>把小项目清单里的 12 项各填一个具体日期，写在纸上贴显示器边。每周日核对一次，欠账当周补。</td><td>只列清单不定时间</td></tr>
+      <tr><td><b>找一个人互相看</b></td><td>同组同学、室友、或者每周把 commit 记录发给我都行。有人会看，完成率完全不同。</td><td>自我安慰式「差不多做完了」</td></tr>
+      <tr><td><b>每周录 90 秒</b></td><td>周末录屏本周跑出来的最好结果（曲线、预测、生成图），存一个文件夹。七周后直接是你的汇报素材。</td><td>12 月底想不起自己做过什么</td></tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-top:34px"><span class="num">03</span>每周做什么</h2>
+  <p class="sec-note">土堆课程以实际分集标题为准。每个周末就是你的 deadline——周报发出去的时间点。</p>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W1</span><span class="wtitle">数据管道打通 ＋ 提交第一批小项目</span><span class="wdate">11/9 – 11/15</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>P1–P5 环境部分 <b>1.5 倍速掠过</b>（你已装好，只核对差异）</li>
+          <li>P6–P15 精看跟敲：Dataset、TensorBoard、Transforms、DataLoader</li>
+          <li>《深度学习入门》 第 3 章 3.4–3.6（矩阵乘法、softmax）</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ①②③（见下表 W1 行）</li>
+          <li class="ok">GitHub 仓库初始化，<b>本周至少 6 次 commit</b></li>
+          <li class="ok">第 1 份周报，<b>周六发给导师</b></li>
+          <li class="ok">逐日拆解见《W1逐日任务-11月9日-15日.html》</li>
+        </ul>
+      </div>
+      <div class="gate"><b>本周自检：</b>关掉视频，从零写出 Dataset 的三个方法，并解释 <code>transforms.Compose</code> 每步在干什么。<b>本周硬指标：</b>三个小项目都跑出结果 + 仓库里 6 条 commit，缺一条就周日补，不许顺延到 W2。</div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W2</span><span class="wtitle">网络结构 ＋ 训练循环</span><span class="wdate">11/16 – 11/22</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>P16–P24：nn.Module、卷积、池化、激活、Sequential、损失、优化器</li>
+          <li>P17「卷积操作（可选）」跳过，省 1 小时</li>
+          <li>《深度学习入门》 第 4、5 章（梯度、计算图、反向传播实现）</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ④⑤⑥</li>
+          <li class="ok">训练循环自己写：forward → loss → <code>zero_grad()</code> → <code>backward()</code> → <code>step()</code></li>
+          <li class="ok">《深度学习入门》第 5 章反向传播用 numpy 手写一遍（不调 autograd）</li>
+        </ul>
+      </div>
+      <div class="gate"><b>本周自检：</b>手推 3×3 卷积（无 padding）+ 2×2 池化的输出尺寸；说清 <code>zero_grad()</code> 为什么必须在 <code>backward()</code> 之前。这两条是「反向传播 + CNN」的要求落到手上的样子。</div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W3</span><span class="wtitle">CNN 调参 ＋ 上 GPU</span><span class="wdate">11/23 – 11/29</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>P25 起：完整训练套路、GPU 训练、保存读取、验证套路</li>
+          <li>《深度学习入门》 第 6 章（初始化、BN、Dropout）、第 7 章（CNN 实现）</li>
+          <li>《动手学深度学习》 第 6 章、第 7 章 7.1–7.5（AlexNet / VGG / BN）</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ⑦⑧⑨</li>
+          <li class="ok">CIFAR-10 基线 ≥ 70%，训练/验证双曲线</li>
+          <li class="ok">确定复现选题，把论文原文下载好</li>
+          <li>向导师申请 GPU 服务器账号（如需要）</li>
+        </ul>
+      </div>
+      <div class="gate"><b>本周自检：</b>8GB 显存下 ResNet18 的 batch 能跑到 128 不 OOM（开 AMP）；能说清训练 loss 降、验证 loss 升意味着什么。</div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W4</span><span class="wtitle">论文读透 ＋ 复现骨架</span><span class="wdate">11/30 – 12/6</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>读 ResNet 原文：Abstract、Intro、Fig.2、残差公式、实验设置表</li>
+          <li><b>合上所有资料</b>，纸上画出残差块结构和维度变化</li>
+          <li>敲出 BasicBlock + ResNet20，先在小数据上过一遍前向</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ⑩⑪</li>
+          <li class="ok">自己写的 ResNet20 能在 CIFAR-10 上跑通 1 个 epoch</li>
+          <li class="ok">一页复现计划：复现哪张表、对齐哪个指标</li>
+        </ul>
+      </div>
+      <div class="gate"><b>中期生死线：</b>到 W4 结束，模型还跑不起来（维度对不上、loss 不降）→ <b>降级到 VGG11 或 LeNet</b>，别换论文死磕。复现的目的是学会「读论文→写代码」这条路，不是刷到论文的 SOTA。</div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W5</span><span class="wtitle">复现训练与调参</span><span class="wdate">12/7 – 12/13</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>按论文设置训练：优化器、学习率衰减、增强、epoch 数</li>
+          <li>记录每次实验的配置和结果，形成实验日志表</li>
+          <li>跑不通的地方记下来——这就是组会上最值钱的素材</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ⑫⑬</li>
+          <li class="ok">复现准确率达到论文报告的 <b>95% 以上水平</b>（ResNet20 / CIFAR-10 约 91%）</li>
+          <li class="ok">实验日志：至少 8 组配置</li>
+        </ul>
+      </div>
+      <div class="gate"><b>注意：</b>准确率卡在 85% 上不去，十有八九是数据增强或学习率调度没对上论文，不是模型写错了。先查这两处，再改结构。</div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W6</span><span class="wtitle">复现收尾 ＋ 补 SVM</span><span class="wdate">12/14 – 12/20</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>主线</h4>
+        <ul>
+          <li>补做消融：有无残差连接、不同深度——<b>导师汇报要求讲消融实验</b></li>
+          <li>SVM：李航 7.1–7.2 只看思想，配一个 sklearn 实验</li>
+          <li>整理代码，删临时文件，README 写清怎么跑</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">小项目 ⑭⑮</li>
+          <li class="ok">消融对比表（有/无残差、深/浅）</li>
+          <li class="ok">能用三句话讲清 SVM：最大间隔、支持向量、核技巧</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="whead"><span class="wno">W7</span><span class="wtitle">报告 ＋ 20 分钟试讲</span><span class="wdate">12/21 – 12/27</span></div>
+    <div class="wbody">
+      <div class="wcol">
+        <h4>做什么</h4>
+        <ul>
+          <li>写复现报告 4–6 页：论文解决什么 / 我怎么做 / 结果对比 / 差异分析</li>
+          <li>按组会标准做 20 分钟讲稿（结构见第 07 节）</li>
+          <li>整理 12 个小项目清单，作为「熟练度」证据</li>
+        </ul>
+      </div>
+      <div class="wcol">
+        <h4>交付</h4>
+        <ul>
+          <li class="ok">12/27 前把报告 + 材料发给导师</li>
+          <li class="ok">一次完整试讲录音（自己听一遍再改）</li>
+          <li class="ok">下学期方向意向：想做 CV 还是 NLP，为什么</li>
+        </ul>
+      </div>
+      <div class="gate"><b>提前占位：</b>12 月底后每周六就是论文分享组会，每人 20 分钟起。你现在做的试讲，等于把第一次组会的准备提前做完了。</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>小项目清单（12 个必做 + 3 个选做）</h2>
+  <p class="sec-note">这就是导师要的「每周 1–2 个简单实践项目」。每个 2–4 小时，标准是「跑通 + 有个数字」，不写报告。</p>
+  <table>
+    <thead><tr><th style="width:38px">#</th><th>小项目</th><th style="width:150px">参考</th><th style="width:120px">判定标准</th><th style="width:52px">周次</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>自定义 Dataset + DataLoader</b> 读本地图片</td><td>土堆 P6–P7、P15</td><td>迭代出形状正确的 batch</td><td><span class="wk">W1</span></td></tr>
+      <tr><td>2</td><td><b>TensorBoard</b> 同时记录 loss 与图片网格</td><td>土堆 P8–P9</td><td>两个面板都出图</td><td><span class="wk">W1</span></td></tr>
+      <tr><td>3</td><td><b>Transforms 管道对比</b>（裁剪/翻转/归一化）</td><td>土堆 P10–P13</td><td>同一张图 4 种结果拼图</td><td><span class="wk">W1</span></td></tr>
+      <tr><td>4</td><td><b>MLP on Fashion-MNIST</b></td><td>土堆 P16、P20–P24</td><td>测试 acc ≥ 88%</td><td><span class="wk">W2</span></td></tr>
+      <tr><td>5</td><td><b>LeNet on MNIST</b>，训练循环全手写</td><td>土堆 P18–P19、P22</td><td>测试 acc ≥ 98%</td><td><span class="wk">W2</span></td></tr>
+      <tr><td>6</td><td><b>优化器对比</b>：SGD / Momentum / Adam</td><td>土堆 P24</td><td>三条 loss 曲线同图</td><td><span class="wk">W2</span></td></tr>
+      <tr><td>7</td><td><b>学习率 × batch size</b> 网格实验</td><td>土堆 P24</td><td>4 组配置对比表</td><td><span class="wk">W3</span></td></tr>
+      <tr><td>8</td><td><b>CIFAR-10 基线 CNN</b></td><td>土堆 P25 起</td><td>测试 acc ≥ 70%</td><td><span class="wk">W3</span></td></tr>
+      <tr><td>9</td><td><b>预训练 ResNet18 微调</b></td><td>《动手学深度学习》 13.2</td><td>测试 acc ≥ 90%</td><td><span class="wk">W3</span></td></tr>
+      <tr><td>10</td><td><b>数据增强消融</b>（有/无增强）</td><td>《动手学深度学习》 13.1</td><td>两列结果对比</td><td><span class="wk">W4</span></td></tr>
+      <tr><td>11</td><td><b>Dropout / 权重衰减 / BN 三个消融</b></td><td>《深度学习入门》 第 6 章</td><td>四组配置对比</td><td><span class="wk">W4</span></td></tr>
+      <tr><td>12</td><td><b>模型保存 / 加载 / 单图推理脚本</b></td><td>土堆「保存读取」</td><td>输入一张图输出类别+概率</td><td><span class="wk">W5</span></td></tr>
+      <tr><td>13</td><td><b>SVM 分类实验</b>，与 MLP 同数据对比</td><td>李航 7.1–7.2 + sklearn</td><td>两组准确率并列</td><td><span class="wk">W6</span></td></tr>
+      <tr><td>14</td><td><b>Grad-CAM 可视化</b> <span class="opt">选做</span></td><td>搜教程</td><td>热力图叠原图</td><td><span class="wk">W6</span></td></tr>
+      <tr><td>15</td><td><b>DCGAN 生成 MNIST</b> <span class="opt">选做</span></td><td>搜教程</td><td>能看出数字轮廓</td><td><span class="wk">W6</span></td></tr>
+    </tbody>
+  </table>
+  <p class="sec-note" style="margin-top:12px">周报里不要写「学习了 DataLoader」，写「小项目 1 完成：自制 Dataset 读 200 张图，batch 形状 (32,3,224,224)，见 commit abc1234」。导师原话是周报<b>严禁编造或复制粘贴</b>，数字 + 截图 + commit 是唯一让人信服的形式。</p>
+</section>
+
+<section>
+  <h2><span class="num">05</span>论文复现：怎么算「独立完成」</h2>
+  <p class="sec-note">导师的红线是「严禁直接复制代码或依赖大模型生成」。这条红线具体落在哪，得说清楚，否则你会不自觉地越线。</p>
+  <div class="two">
+    <div class="list-card yes">
+      <h4>可以</h4>
+      <ul>
+        <li>读论文原文，逐段做笔记</li>
+        <li>看 《动手学深度学习》 的文字讲解理解原理（只看文字，<b>不看它的代码块</b>）</li>
+        <li>查 PyTorch 官方文档的 API 签名和参数含义</li>
+        <li>看报错信息，自己搜索错误原因</li>
+      </ul>
+    </div>
+    <div class="list-card no">
+      <h4>不可以</h4>
+      <ul>
+        <li>开着别人的 <code>.ipynb</code> 边看边敲</li>
+        <li>让大模型生成模型定义、训练循环</li>
+        <li>直接 clone 开源实现然后改超参</li>
+        <li>复制粘贴后「看懂了」就当自己写的</li>
+      </ul>
+    </div>
+  </div>
+  <table style="margin-top:14px">
+    <thead><tr><th style="width:120px">步骤</th><th>做法</th></tr></thead>
+    <tbody>
+      <tr><td><b>1 选论文</b></td><td>首选 <b>ResNet</b>（CIFAR-10 版，ResNet20）。结构简单、指标明确、8GB 够跑。备选 VGG11，降级 LeNet-5。</td></tr>
+      <tr><td><b>2 读三遍</b></td><td>一遍通读抓结论 → 二遍只看方法章记结构 → 三遍对着图表画自己的结构草图。</td></tr>
+      <tr><td><b>3 纸上设计</b></td><td>合上所有资料，写清每层的输入输出维度、残差怎么加、下采样在哪。这一步写不出来就别开电脑。</td></tr>
+      <tr><td><b>4 手敲</b></td><td>先写模型，用随机张量测前向形状；再写训练循环；最后接数据。</td></tr>
+      <tr><td><b>5 对齐</b></td><td>先跑通短训练看 loss 会不会降，再对照论文的超参表逐项设置。</td></tr>
+      <tr><td><b>6 自证</b></td><td>GitHub 分次 commit（「实现 BasicBlock 前向」「加入学习率衰减」），配一份实验日志。<b>这比任何解释都有说服力。</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">06</span>周报模板（每周六发导师）</h2>
+  <div class="rp">
+    <ol>
+      <li><b>本周小项目</b>：编号 + 一句话 + 关键数字 + commit hash。例：「#5 LeNet on MNIST：测试 acc 98.4%，训练 3 分 20 秒，commit a1b2c3d」。</li>
+      <li><b>主线进度</b>：土堆看到第几集、书看到第几章。</li>
+      <li><b>卡住的地方 + 怎么试的</b>：「试了 A → B 报 xx 错 → 查文档发现是 C 版本问题 → 改 D 才通」。<b>这一栏最值钱</b>，也是导师判断你是不是真做的依据。</li>
+      <li><b>下周计划</b>：3 条以内，可验证。</li>
+      <li><b>需要的支持</b>：GPU 账号、数据、论文推荐。没有写「无」。</li>
+    </ol>
+  </div>
+  <p class="sec-note" style="margin-top:12px">小组长统收要等 12 月底分组后才启动——在那之前<b>直接发导师微信或邮箱</b>，第一份可以附一句「老师，以后每周六发周报给您，格式您看这样行吗」。一周都别断，7 份周报就是 12 月底汇报的底稿。</p>
+</section>
+
+<section>
+  <h2><span class="num">07</span>12 月底之后的路，现在就要知道</h2>
+  <p class="sec-note">你这两个月做的每件事，都是为这个阶段铺路。知道终点长什么样，现在就不会跑偏。</p>
+  <div class="after">
+    <h3>导师原文的后续安排</h3>
+    <ol>
+      <li><b>1 月：</b>按 4–5 人一组分配细分研究方向，导师给该领域经典 + 最新论文。</li>
+      <li><b>每周六：</b>论文分享组会，每组每次 4–5 人汇报，<b>每人 20 分钟以上</b>。必须讲清：论文解决什么问题 / 模块设计 / 消融实验 / 代码运行结果 / 新方法在你方向的应用潜力。</li>
+      <li><b>2–3 月：</b>产生自己的科研想法。</li>
+      <li><b>一年内：</b>产出至少 2 篇论文，支撑考研 / 保研 / 出国。</li>
+      <li><b>其他：</b>小组长统收周报；发论文和参加贴近科研的竞赛有奖励资金；要主动关注本科生科研竞赛和课题申请机会。</li>
+    </ol>
+  </div>
+  <div class="grid3" style="margin-top:14px">
+    <div class="card">
+      <span class="tag">现在就做</span>
+      <h3>按组会标准练一次</h3>
+      <p>W7 的试讲就用那五段结构：问题 / 模块设计 / 消融 / 运行结果 / 应用潜力。20 分钟讲不满，说明论文还没读透。</p>
+    </div>
+    <div class="card">
+      <span class="tag">低成本高回报</span>
+      <h3>整理一份竞赛清单</h3>
+      <p>花 1 小时查：Kaggle 入门赛、天池、大创、计算机设计大赛、挑战杯。挑 2 个能报的，写进周报「需要的支持」栏。<b>导师明确提过竞赛奖励。</b></p>
+    </div>
+    <div class="card">
+      <span class="tag">提前想</span>
+      <h3>方向意向</h3>
+      <p>1 月要分组。现在就想：CV 还是 NLP？你手上的 ResNet 复现是 CV 入场券。别到时候被动分配。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">附</span>五本书怎么用（别通读）</h2>
+  <p class="sec-note">导师发了五本书（文件都在 <code>E:\作业\导师资料\</code>），但七周里能当教材读的只有一本。其余四本当手册——通读它们是这七周最舒服、也最没用的努力方式。下面一律写全名，不用简称。</p>
+  <table>
+    <thead><tr><th style="width:206px">书</th><th style="width:88px">定位</th><th>七周内读哪几章</th><th style="width:128px">什么时候</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>《深度学习入门：基于Python的理论与实现》</b><br><span class="opt">斋藤康毅</span></td>
+        <td><b>主教材</b><br>唯一顺序精读</td>
+        <td>第 3 章 3.4–3.6（矩阵乘、softmax）、<b>第 4 章</b>（梯度与学习算法）、<b>第 5 章</b>（计算图与反向传播）、第 6 章（初始化/BN/Dropout）、第 7 章（CNN 实现）。约 160 页，逐节读，公式跟着纸笔推一遍，代码手敲成 numpy 版。</td>
+        <td>W1 只读 15 页；<b>W2–W3 每周 50–60 页（约 2 小时）</b>，固定放周六</td>
+      </tr>
+      <tr>
+        <td><b>《动手学深度学习（PyTorch 版·第 2 版）》</b><br><span class="opt">李沐 等</span></td>
+        <td>手册<br>局部精读</td>
+        <td>第 6 章（卷积）、第 7 章 7.1–7.5（AlexNet / VGG / BN / <b>ResNet</b>）、第 13 章（微调）。<b>只看文字和公式，代码自己敲</b>；它的 notebook 不要整本跑。</td>
+        <td>W3 起做 CNN、W4 复现 ResNet 时查</td>
+      </tr>
+      <tr>
+        <td><b>《Learning Python（第 6 版）》</b><br><span class="opt">Mark Lutz · 英文原版</span></td>
+        <td>字典<br><b>不要通读</b></td>
+        <td>只查三处：类与继承、魔术方法（<code>__init__</code> / <code>__len__</code> / <code>__getitem__</code>）、迭代器与生成器。写 Dataset 时会正好用到。</td>
+        <td>报错或看不懂语法时反查</td>
+      </tr>
+      <tr>
+        <td><b>《Python编程：从入门到实践（第 3 版）》</b><br><span class="opt">Eric Matthes</span></td>
+        <td>字典</td>
+        <td>只查文件读写、异常处理、类。项目二要用到文件操作时翻。</td>
+        <td>需要时反查</td>
+      </tr>
+      <tr>
+        <td><b>《统计学习方法（第 2 版）》</b><br><span class="opt">李航</span></td>
+        <td>局部</td>
+        <td><b>只读 7.1–7.2（SVM）</b>，读到能讲清最大间隔、支持向量、核技巧即可，不推对偶问题。其余章节寒假再看。</td>
+        <td>W6 集中 3–4 小时</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card">
+      <span class="tag">配比</span>
+      <h3>书 2 : 视频 3 : 动手 5</h3>
+      <p>按小时算。七周 140 小时里，读书约 25 小时，看视频约 35 小时，敲代码和跑实验 80 小时。</p>
+    </div>
+    <div class="card">
+      <span class="tag">为什么不能只看书</span>
+      <h3>验收标准不是「读完了」</h3>
+      <p>导师考的是每周 1–2 个小项目 + 独立复现。书读完但代码写不出来 = 0；反过来代码跑通但讲不清原理，20 分钟组会也过不了。</p>
+    </div>
+    <div class="card">
+      <span class="tag">为什么也不能只看视频</span>
+      <h3>视频会骗你以为懂了</h3>
+      <p>视频跳过「为什么」，跟着敲能跑但说不出原因。《深度学习入门》第 4、5 章的推导就是补这个——导师要的反向传播理解深度，只能从这里来。</p>
+    </div>
+  </div>
+
+  <div class="fix" style="margin-top:16px">
+    <h3>一个诚实的提醒</h3>
+    <p><b>《Learning Python（第 6 版）》有 1600 页，通读要三个月，其中八成内容和这次任务无关。</b>而且读它是最「像在学习」的逃避方式——翻书有进度感，debug 没有。如果你某天发现自己宁愿读 Python 语法也不想打开报错的代码，那不是勤奋，是在躲。W1 到 W7 都不要碰它的正文章节。</p>
+  </div>
+
+  <h2 style="margin-top:34px"><span class="num">08</span>五条避坑</h2>
+  <div class="list-card">
+    <ol class="danger">
+      <li><b>视频看完 ≠ 学会。</b>规则：看一集 → 关视频 → 凭记忆重写 → 跑通 → 才点下一集。边看边抄是这七周最容易掉进去的坑。</li>
+      <li><b>8GB 显存的红线。</b>CIFAR + ResNet 的 batch 别超 64；OOM 就降 batch 或开 <code>torch.amp</code>；不要一上来试 256。</li>
+      <li><b>《统计学习方法（第 2 版）》只读 SVM 那一章的两节。</b>其余章节（感知机、EM、HMM、CRF）这七周不碰，寒假再说。《Learning Python（第 6 版）》和《Python编程：从入门到实践（第 3 版）》当字典查，别线性读。</li>
+      <li><b>不追求「33 集全看完」。</b>宁可少看 3 集，也必须保证 W4 复现能起步。课程是手段，复现是交付物。</li>
+      <li><b>土堆课程是 2019 年的。</b>遇到 <code>transforms</code> 参数、TensorBoard 路径这类 API 报错，是版本变了，不是你写错了——查官方文档，别自我怀疑耽误一小时。</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  PyTorch 七周冲刺计划 v2 · 2026.11.9 – 12.27 · 依据方承炀宣讲原文重排 · Ctrl/Cmd + P 可打印 A4
+</footer>
+
+</div>
+</body>
+</html>
